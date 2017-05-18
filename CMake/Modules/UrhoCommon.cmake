@@ -129,7 +129,6 @@ set (CMAKE_EXE_LINKER_FLAGS "${INDIRECT_DEPS_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKE
 
 # Define all supported build options
 include (CMakeDependentOption)
-option (URHO3D_C++11 "Enable C++11 standard")
 cmake_dependent_option (IOS "Setup build for iOS platform" FALSE "XCODE" FALSE)
 cmake_dependent_option (TVOS "Setup build for tvOS platform" FALSE "XCODE" FALSE)
 cmake_dependent_option (URHO3D_64BIT "Enable 64-bit build, the default is set based on the native ABI of the chosen compiler toolchain" "${NATIVE_64BIT}" "NOT MSVC AND NOT ANDROID AND NOT (ARM AND NOT IOS) AND NOT WEB AND NOT POWERPC" "${NATIVE_64BIT}")     # Intentionally only enable the option for iOS but not for tvOS as the latter is 64-bit only
@@ -267,6 +266,8 @@ if (CMAKE_CROSSCOMPILING AND NOT ANDROID AND NOT APPLE)
 else ()
     unset (URHO3D_SCP_TO_TARGET CACHE)
 endif ()
+# Force C++11 standard on certain build option combination, like when using generic bindings generation in AngelScript on Web and 64-bit ARM platforms
+cmake_dependent_option (URHO3D_CXX11 "Enable C++11 standard" TRUE "NOT URHO3D_CLANG_TOOLS AND NOT (URHO3D_ANGELSCRIPT AND (EMSCRIPTEN OR (ARM AND URHO3D_64BIT))) AND NOT URHO3D_DATABASE_ODBC" TRUE)
 if (ANDROID)
     set (ANDROID TRUE CACHE INTERNAL "Setup build for Android platform")
     cmake_dependent_option (ANDROID_NDK_GDB "Enable ndk-gdb for debugging (Android platform only)" FALSE "CMAKE_BUILD_TYPE STREQUAL Debug" FALSE)
@@ -373,8 +374,7 @@ if (URHO3D_CLANG_TOOLS OR URHO3D_BINDINGS)
     endif ()
 endif ()
 if (URHO3D_CLANG_TOOLS)
-    # Require C++11 standard and no precompiled-header
-    set (URHO3D_C++11 1)
+    # Require no precompiled-header
     set (URHO3D_PCH 0)
     set (URHO3D_LIB_TYPE SHARED)
     # Set build options that would maximise the AST of Urho3D library
@@ -417,15 +417,8 @@ if (NOT URHO3D_LIB_TYPE STREQUAL SHARED AND NOT URHO3D_LIB_TYPE STREQUAL MODULE)
     endif ()
 endif ()
 
-# Force C++11 standard (required by the generic bindings generation) if using AngelScript on Web and 64-bit ARM platforms
-if (URHO3D_ANGELSCRIPT AND (EMSCRIPTEN OR (ARM AND URHO3D_64BIT)))
-    set (URHO3D_C++11 1)
-endif ()
-
-# Force C++11 standard (required by nanodbc library) if using ODBC
 if (URHO3D_DATABASE_ODBC)
     find_package (ODBC REQUIRED)
-    set (URHO3D_C++11 1)
 endif ()
 
 # Define preprocessor macros (for building the Urho3D library) based on the configured build options
@@ -468,8 +461,8 @@ if (WIN32 AND NOT CMAKE_PROJECT_NAME MATCHES ^Urho3D-ExternalProject-)
 endif ()
 
 # Platform and compiler specific options
-if (URHO3D_C++11)
-    add_definitions (-DURHO3D_CXX11)   # Note the define is NOT 'URHO3D_C++11'!
+if (URHO3D_CXX11)
+    add_definitions (-DURHO3D_CXX11)
     if (CMAKE_CXX_COMPILER_ID MATCHES GNU)
         # Use gnu++11/gnu++0x instead of c++11/c++0x as the latter does not work as expected when cross compiling
         if (VERIFIED_SUPPORTED_STANDARD)
