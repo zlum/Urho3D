@@ -354,8 +354,8 @@ public:
         AddRef();
     }
 
-    /// Perform a dynamic cast from a weak array pointer of another type.
-    template <class U> void DynamicCast(const WeakArrayPtr<U>& rhs)
+    /// Perform a reinterpret cast from a weak array pointer of another type.
+    template <class U> void ReinterpretCast(const WeakArrayPtr<U>& rhs)
     {
         ReleaseRef();
         ptr_ = dynamic_cast<T*>(rhs.Get());

@@ -24,7 +24,9 @@
 
 #include "../IO/Log.h"
 
+#ifdef __EMSCRIPTEN__
 #include <cstdio>
+#endif
 
 #include "../DebugNew.h"
 
@@ -960,20 +962,20 @@ unsigned String::DecodeUTF8(const char*& src)
     else if (char1 < 0xe0)
     {
         unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
-        return (unsigned)((char2 & 0x3fu) | ((char1 & 0x1fu) << 6u));
+        return (char2 & 0x3fu) | ((char1 & 0x1fu) << 6u);
     }
     else if (char1 < 0xf0)
     {
         unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
-        return (unsigned)((char3 & 0x3fu) | ((char2 & 0x3fu) << 6u) | ((char1 & 0xfu) << 12u));
+        return (char3 & 0x3fu) | ((char2 & 0x3fu) << 6u) | ((char1 & 0xfu) << 12u);
     }
     else if (char1 < 0xf8)
     {
         unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
-        return (unsigned)((char4 & 0x3fu) | ((char3 & 0x3fu) << 6u) | ((char2 & 0x3fu) << 12u) | ((char1 & 0x7u) << 18u));
+        return (char4 & 0x3fu) | ((char3 & 0x3fu) << 6u) | ((char2 & 0x3fu) << 12u) | ((char1 & 0x7u) << 18u);
     }
     else if (char1 < 0xfc)
     {
@@ -981,8 +983,8 @@ unsigned String::DecodeUTF8(const char*& src)
         unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char5 = GET_NEXT_CONTINUATION_BYTE(src);
-        return (unsigned)((char5 & 0x3fu) | ((char4 & 0x3fu) << 6u) | ((char3 & 0x3fu) << 12u) | ((char2 & 0x3fu) << 18u) |
-                          ((char1 & 0x3u) << 24u));
+        return (char5 & 0x3fu) | ((char4 & 0x3fu) << 6u) | ((char3 & 0x3fu) << 12u) | ((char2 & 0x3fu) << 18u) |
+               ((char1 & 0x3u) << 24u);
     }
     else
     {
@@ -991,8 +993,8 @@ unsigned String::DecodeUTF8(const char*& src)
         unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char5 = GET_NEXT_CONTINUATION_BYTE(src);
         unsigned char char6 = GET_NEXT_CONTINUATION_BYTE(src);
-        return (unsigned)((char6 & 0x3fu) | ((char5 & 0x3fu) << 6u) | ((char4 & 0x3fu) << 12u) | ((char3 & 0x3fu) << 18u) |
-                          ((char2 & 0x3fu) << 24u) | ((char1 & 0x1u) << 30u));
+        return (char6 & 0x3fu) | ((char5 & 0x3fu) << 6u) | ((char4 & 0x3fu) << 12u) | ((char3 & 0x3fu) << 18u) |
+               ((char2 & 0x3fu) << 24u) | ((char1 & 0x1u) << 30u);
     }
 }
 
@@ -1051,14 +1053,14 @@ Vector<String> String::Split(const char* str, char separator, bool keepEmptyStri
         {
             const ptrdiff_t splitLen = splitEnd - str;
             if (splitLen > 0 || keepEmptyStrings)
-                ret.Push(String(str, splitLen));
+                ret.Push(String(str, (unsigned)splitLen));      // Casting unsigned long to unsigned!
             str = splitEnd + 1;
         }
     }
 
     const ptrdiff_t splitLen = strEnd - str;
     if (splitLen > 0 || keepEmptyStrings)
-        ret.Push(String(str, splitLen));
+        ret.Push(String(str, (unsigned)splitLen));
 
     return ret;
 }

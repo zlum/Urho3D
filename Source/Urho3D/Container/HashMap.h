@@ -381,7 +381,7 @@ public:
     {
         ConstIterator it = start;
         while (it != end)
-            InsertNode(*it++);
+            InsertNode(*it++, true);
     }
 
     /// Erase a pair by key. Return true if was found.

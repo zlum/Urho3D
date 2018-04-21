@@ -136,7 +136,7 @@ public:
     /// Construct from a character and fill length.
     explicit String(char value, unsigned length);
 
-    /// Construct from a convertable value.
+    /// Construct from a convertible value.
     template <class T> explicit String(const T& value) :
         length_(0),
         capacity_(0),
@@ -453,7 +453,7 @@ public:
         return hash;
     }
 
-    /// Return substrings split by a separator char. By default don't return empty strings.
+    /// Return substrings split by a separator char. By default don't return empty strings. The substring should not be longer than M_MAX_UNSIGNED.
     static Vector<String> Split(const char* str, char separator, bool keepEmptyStrings = false);
     /// Return a string by joining substrings with a 'glue' string.
     static String Joined(const Vector<String>& subStrings, const String& glue);

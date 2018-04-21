@@ -581,7 +581,7 @@ public:
     bool operator !=(const UniquePtr<U>& rhs) const { return ptr_ != rhs.ptr_; }
 
     /// Cast pointer to bool.
-    operator bool() const { return !!ptr_; }    // NOLINT(google-explicit-constructor)
+    operator bool() const { return ptr_ != nullptr; }    // NOLINT(google-explicit-constructor)
 
     /// Swap with another UniquePtr.
     void Swap(UniquePtr& up) { Urho3D::Swap(ptr_, up.ptr_); }

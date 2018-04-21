@@ -33,7 +33,6 @@
 namespace Urho3D
 {
 
-struct AllocatorBlock;
 struct AllocatorNode;
 
 /// %Allocator memory block.

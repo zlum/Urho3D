@@ -103,10 +103,10 @@ public:
         }
 
         /// Point to the key.
-        const T* operator ->() const { return &(static_cast<Node*>(ptr_))->key_; }
+        T* operator ->() const { return &(static_cast<Node*>(ptr_))->key_; }
 
         /// Dereference the key.
-        const T& operator *() const { return (static_cast<Node*>(ptr_))->key_; }
+        T& operator *() const { return (static_cast<Node*>(ptr_))->key_; }
     };
 
     /// Hash set node const iterator.
@@ -315,7 +315,7 @@ public:
     /// Insert a key by iterator. Return iterator to the value.
     Iterator Insert(const ConstIterator& it)
     {
-        return Iterator(InsertNode(*it));
+        return Insert(*it);
     }
 
     /// Erase a key. Return true if was found.
