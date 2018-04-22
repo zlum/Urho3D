@@ -758,8 +758,8 @@ String GetFileSizeString(unsigned long long memorySize)
     return output;
 }
 
-// Implementation of base64 decoding originally by Ren� Nyffenegger.
-// Modified by Konstantin Guschin and Lasse Oorni
+// Implementation of base64 decoding originally by René Nyffenegger.
+// Modified by Konstantin Guschin, Lasse Oorni, and Wei Tjong Yao
 
 /*
 base64.cpp and base64.h
@@ -803,17 +803,17 @@ PODVector<unsigned char> DecodeBase64(String encodedString)
 
     while (inLen-- && (encodedString[in_] != '=') && IsBase64(encodedString[in_]))
     {
-        charArray4[i++] = encodedString[in_];
+        charArray4[i++] = (unsigned char)encodedString[in_];
         in_++;
 
         if (i == 4)
         {
             for (i = 0; i < 4; i++)
-                charArray4[i] = base64_chars.Find(charArray4[i]);
+                charArray4[i] = (unsigned char)base64_chars.Find(charArray4[i]);
 
-            charArray3[0] = (charArray4[0] << 2u) + ((charArray4[1] & 0x30u) >> 4u);
-            charArray3[1] = ((charArray4[1] & 0xfu) << 4u) + ((charArray4[2] & 0x3cu) >> 2u);
-            charArray3[2] = ((charArray4[2] & 0x3u) << 6u) + charArray4[3];
+            charArray3[0] = (unsigned char)((charArray4[0] << 2u) + ((charArray4[1] & 0x30u) >> 4u));
+            charArray3[1] = (unsigned char)(((charArray4[1] & 0xfu) << 4u) + ((charArray4[2] & 0x3cu) >> 2u));
+            charArray3[2] = (unsigned char)(((charArray4[2] & 0x3u) << 6u) + charArray4[3]);
 
             for (i = 0; (i < 3); i++)
                 ret.Push(charArray3[i]);
@@ -828,11 +828,11 @@ PODVector<unsigned char> DecodeBase64(String encodedString)
             charArray4[j] = 0;
 
         for (j = 0; j <4; j++)
-            charArray4[j] = base64_chars.Find(charArray4[j]);
+            charArray4[j] = (unsigned char)base64_chars.Find(charArray4[j]);
 
-        charArray3[0] = (charArray4[0] << 2u) + ((charArray4[1] & 0x30u) >> 4u);
-        charArray3[1] = ((charArray4[1] & 0xfu) << 4u) + ((charArray4[2] & 0x3cu) >> 2u);
-        charArray3[2] = ((charArray4[2] & 0x3u) << 6u) + charArray4[3];
+        charArray3[0] = (unsigned char)((charArray4[0] << 2u) + ((charArray4[1] & 0x30u) >> 4u));
+        charArray3[1] = (unsigned char)(((charArray4[1] & 0xfu) << 4u) + ((charArray4[2] & 0x3cu) >> 2u));
+        charArray3[2] = (unsigned char)(((charArray4[2] & 0x3u) << 6u) + charArray4[3]);
 
         for (j = 0; (j < i - 1); j++)
             ret.Push(charArray3[j]);

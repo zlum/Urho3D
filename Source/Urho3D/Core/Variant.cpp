@@ -25,8 +25,6 @@
 #include "../Core/StringUtils.h"
 #include "../IO/VectorBuffer.h"
 
-#include <cstring>
-
 namespace Urho3D
 {
 
@@ -514,7 +512,7 @@ String Variant::ToString() const
 
     default:
         // VAR_RESOURCEREF, VAR_RESOURCEREFLIST, VAR_VARIANTVECTOR, VAR_STRINGVECTOR, VAR_VARIANTMAP
-        // Reference string serialization requires typehash-to-name mapping from the context. Can not support here
+        // Reference string serialization requires type-hash-to-name mapping from the context. Can not support here
         // Also variant map or vector string serialization is not supported. XML or binary save should be used instead
         return String::EMPTY;
     }
@@ -531,7 +529,7 @@ bool Variant::IsZero() const
         return value_.int64_ == 0;
 
     case VAR_BOOL:
-        return value_.bool_ == false;
+        return !value_.bool_;
 
     case VAR_FLOAT:
         return value_.float_ == 0.0f;

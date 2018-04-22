@@ -25,16 +25,14 @@
 #include "../Core/CoreEvents.h"
 #include "../Core/Profiler.h"
 
-#include <ctime>
-
 #ifdef _WIN32
+#include <ctime>
 #include <windows.h>
 #include <mmsystem.h>
 #elif __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
 #include <sys/time.h>
-#include <unistd.h>
 #endif
 
 #include "../DebugNew.h"

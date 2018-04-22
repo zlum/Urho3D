@@ -24,7 +24,9 @@
 
 #include "../Core/Profiler.h"
 
+#ifdef __EMSCRIPTEN__
 #include <cstdio>
+#endif
 
 #include "../DebugNew.h"
 

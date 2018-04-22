@@ -62,7 +62,7 @@ private:
     bool pooled_{};
 };
 
-/// Work queue subsystem for multithreading.
+/// Work queue subsystem for multi-threading.
 class URHO3D_API WorkQueue : public Object
 {
     URHO3D_OBJECT(WorkQueue, Object);
@@ -92,7 +92,7 @@ public:
     /// Finish all queued work which has at least the specified priority. Main thread will also execute priority work. Pause worker threads if no more work remains.
     void Complete(unsigned priority);
 
-    /// Set the pool telerance before it starts deleting pool items.
+    /// Set the pool tolerance before it starts deleting pool items.
     void SetTolerance(int tolerance) { tolerance_ = tolerance; }
 
     /// Set how many milliseconds maximum per frame to spend on low-priority work, when there are no worker threads.

@@ -26,9 +26,6 @@
 #include "../Core/StringUtils.h"
 #include "../IO/FileSystem.h"
 
-#include <cstdio>
-#include <fcntl.h>
-
 #ifdef __APPLE__
 #include "TargetConditionals.h"
 #endif
@@ -55,10 +52,14 @@ extern "C" unsigned SDL_TVOS_GetActiveProcessorCount();
 #include <pwd.h>
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
+#if !defined(IOS) && !defined(TVOS)
+#include <fcntl.h>
+#endif
 #elif defined(__APPLE__)
 #include <sys/sysctl.h>
 #include <SystemConfiguration/SystemConfiguration.h> // For the detection functions inside GetLoginName().
 #endif
+
 #ifndef _WIN32
 #include <unistd.h>
 #endif
